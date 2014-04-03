@@ -18,4 +18,10 @@
  */
 @interface TMTumblrActivity : UIActivity
 
+@property (strong, nonatomic) NSString* title;
+@property (strong, nonatomic) NSString* description;
+@property (strong, nonatomic) NSURL* url;
+
++ (BOOL)handleURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;
+
 @end

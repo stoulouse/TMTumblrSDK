@@ -271,13 +271,42 @@ you can specify the file extension `tumblrphoto` and custom UTI `com.tumblr.phot
 ### UIActivityViewController
 
 The SDK includes a [UIActivity subclass](https://github.com/tumblr/TMTumblrSDK/blob/master/TMTumblrSDK/Activity/TMTumblrActivity.h) 
-for including Tumblr in a standard `UIActivityViewController`. It currently 
-provides only the activity icon and title, but you can hook it up however you 
-see fit and we may provide a more integrated solution in the future.
+for including Tumblr in a standard `UIActivityViewController`. 
 
-If you're only interested in this UIActivity subclass,
-the `TMTumblrSDK/Activity` sub-pod can be installed by itself.
+``` objective-c
+#import <TMTumblrActivity.h>
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+	DPRINT( "openURL: %s\n", [[url absoluteString] UTF8String] );
+	BOOL result = [TMTumblrActivity handleURL:url sourceApplication:sourceApplication annotation:annotation];
+	return result;
+}
+```
+
+``` objective-c
+#import <TMTumblrActivity.h>
+
+- (void)actionButtonClicked:(UIBarButtonItem*)sender {
+    // set up items to share, in this case some text and an image
+    NSArray* activityItems = @[ @"Hello Tumblr!", @"https://tumblr.com" ];
+    
+    // set up and present activity view controller
+    TMTumblrActivity* shareActivity = [[TMTumblrActivity alloc] init];
+    UIActivityViewController* activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:@[shareActivity]];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        // present in popup
+        self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
+        shareActivity.activityPopoverViewController = self.activityPopoverController;
+        [self.activityPopoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        
+    } else {
+        // present modally
+        shareActivity.activitySuperViewController = self;
+        [self presentViewController:activityViewController animated:YES completion:NULL];
+    }
+}
+```
 ### Example
 
 The repository includes a [sample application](https://github.com/tumblr/TMTumblrSDK/tree/master/Examples/AppClientExample)

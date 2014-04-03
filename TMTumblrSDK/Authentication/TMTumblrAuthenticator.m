@@ -27,7 +27,7 @@ typedef void (^NSURLConnectionCompletionHandler)(NSURLResponse *, NSData *, NSEr
 
 NSMutableURLRequest *mutableRequestWithURLString(NSString *URLString);
 
-NSError *errorWithStatusCode(int statusCode);
+NSError *errorWithStatusCode(NSInteger statusCode);
 
 NSDictionary *formEncodedDataToDictionary(NSData *data);
 
@@ -60,7 +60,7 @@ NSDictionary *formEncodedDataToDictionary(NSData *data);
             return;
         }
         
-        int statusCode = ((NSHTTPURLResponse *)response).statusCode;
+        NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
         
         if (statusCode == 200) {
             self.authCallback = callback;
@@ -123,7 +123,7 @@ NSDictionary *formEncodedDataToDictionary(NSData *data);
                 self.authCallback(nil, nil, error);
             
         } else {
-            int statusCode = ((NSHTTPURLResponse *)response).statusCode;
+            NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
             
             if (self.authCallback) {
                 if (statusCode == 200) {
@@ -166,7 +166,7 @@ NSDictionary *formEncodedDataToDictionary(NSData *data);
             return;
         }
         
-        int statusCode = ((NSHTTPURLResponse *)response).statusCode;
+        NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
         
         if (statusCode == 200) {
             NSDictionary *responseParameters = formEncodedDataToDictionary(data);
@@ -207,7 +207,7 @@ NSMutableURLRequest *mutableRequestWithURLString(NSString *URLString) {
     return [NSMutableURLRequest requestWithURL:[NSURL URLWithString:URLString]];
 }
 
-NSError *errorWithStatusCode(int statusCode) {
+NSError *errorWithStatusCode(NSInteger statusCode) {
     return [NSError errorWithDomain:@"Authentication request failed" code:statusCode userInfo:nil];
 }
 
